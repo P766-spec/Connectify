@@ -1,7 +1,7 @@
-# Connectify - A SOcial Media App
+# Connectify - A Social Media App
 
 ## Tech Stack
-- ReactJS
+-  ReactJS
 -  Chakra- UI
 -  Firebase
 
