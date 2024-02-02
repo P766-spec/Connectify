@@ -1,5 +1,8 @@
 import { useToast } from "@chakra-ui/react";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { setDoc, doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
@@ -10,26 +13,25 @@ import isUsernameExists from "../util/isUsernameExisis";
 
 export function useAuth() {
   const [authUser, authLoading, error] = useAuthState(auth);
-  const [ isLoading, setLoading] = useState(true);
-  const [user, setUser]= useState();
+  const [isLoading, setLoading] = useState(true);
+  const [user, setUser] = useState();
 
-  useEffect(()=> {
+  useEffect(() => {
     async function fetchData() {
-      setLoading(true);  
+      setLoading(true);
       const ref = doc(db, "users", authUser.uid);
-       const docSnap = await getDoc(ref)
-       setUser(docSnap.data())
-       setLoading(false);
+      const docSnap = await getDoc(ref);
+      setUser(docSnap.data());
+      setLoading(false);
     }
 
-    if ( !authLoading) {
-      if(authUser) fetchData();
+    if (!authLoading) {
+      if (authUser) fetchData();
       else setLoading(false);
     }
+  }, [authLoading, authUser]);
 
-}, [authLoading])
-
-  return { user , isLoading, error };
+  return { user, isLoading, error };
 }
 
 export function useLogin() {
@@ -81,8 +83,8 @@ export function useRegister() {
     redirectTo = DASHBOARD,
   }) {
     setLoading(true);
-    const usernameExists = await isUsernameExists(username)
-    if(usernameExists) {
+    const usernameExists = await isUsernameExists(username);
+    if (usernameExists) {
       toast({
         title: "Username already exists",
         status: "error",
@@ -91,7 +93,6 @@ export function useRegister() {
         duration: 5000,
       });
       setLoading(false);
-    
     } else {
       try {
         const res = await createUserWithEmailAndPassword(auth, email, password);
@@ -113,7 +114,7 @@ export function useRegister() {
         });
 
         navigate(redirectTo);
-      } catch (error){
+      } catch (error) {
         toast({
           title: "Signing Up failed",
           description: error.message,
@@ -126,7 +127,6 @@ export function useRegister() {
         setLoading(false);
       }
     }
-   
   }
   return { register, isLoading };
 }
